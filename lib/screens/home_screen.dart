@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: InkWell(
                       onTap: () {
                         Get.defaultDialog(
-                          title: "Do you want to edit?",
+                          title: "Do you want to Save",
                           content: TextFormField(
                             controller: noteController..text = "$index",
                             decoration: InputDecoration(hintText: "Edit"),
