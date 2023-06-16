@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, file_names, unused_local_variable
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:note_app/screens/login_screen.dart';
 
@@ -12,6 +14,10 @@ class SignUPScreen extends StatefulWidget {
 }
 
 class _SignUPScreenState extends State<SignUPScreen> {
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
+  TextEditingController userPhoneController = TextEditingController();
+  TextEditingController userPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,10 +26,12 @@ class _SignUPScreenState extends State<SignUPScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Text("SIGNUP",
-            style: TextStyle(
-              color: Colors.black,
-            )),
+        title: Text(
+          "SIGNUP",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -44,6 +52,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                 child: TextFormField(
+                  controller: userNameController,
                   decoration: InputDecoration(
                     hintText: "UserName",
                     border: OutlineInputBorder(
@@ -58,6 +67,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                 child: TextFormField(
+                  controller: userEmailController,
                   decoration: InputDecoration(
                     hintText: "Email",
                     border: OutlineInputBorder(
@@ -72,6 +82,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                 child: TextFormField(
+                  controller: userPhoneController,
                   decoration: InputDecoration(
                     hintText: "Phone",
                     border: OutlineInputBorder(
@@ -86,6 +97,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                 child: TextFormField(
+                  controller: userPasswordController,
                   decoration: InputDecoration(
                     hintText: "Password",
                     border: OutlineInputBorder(
@@ -101,7 +113,19 @@ class _SignUPScreenState extends State<SignUPScreen> {
                 height: 80.0,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  EasyLoading.show();
+                  String userName = userNameController.text.trim();
+                  String userEmail = userEmailController.text.trim();
+                  String userPhone = userPhoneController.text.trim();
+                  String userPassword = userPasswordController.text.trim();
+
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: userEmail, password: userPassword);
+
+                  EasyLoading.dismiss();
+                  print("userCreated");
+                },
                 child: Text("SIGNUP"),
               ),
               Container(
