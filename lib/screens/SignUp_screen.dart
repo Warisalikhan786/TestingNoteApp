@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, file_names, unused_local_variable
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, file_names, unused_local_variable, avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -18,6 +19,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPhoneController = TextEditingController();
   TextEditingController userPasswordController = TextEditingController();
+
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,8 +123,25 @@ class _SignUPScreenState extends State<SignUPScreen> {
                   String userPhone = userPhoneController.text.trim();
                   String userPassword = userPasswordController.text.trim();
 
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: userEmail, password: userPassword);
+                  Map<String, dynamic> userData = {
+                    'userName': userName,
+                    'userEmail': userEmail,
+                    'userPhone': userPhone,
+                    'createdAt': DateTime.now(),
+                    // 'userId': user!.uid,
+                  };
+
+                  await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: userEmail, password: userPassword)
+                      .then(
+                    (value) {
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .doc()
+                          .set(userData);
+                    },
+                  );
 
                   EasyLoading.dismiss();
                   print("userCreated");
