@@ -7,6 +7,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:note_app/screens/login_screen.dart';
 
+import '../services/signUp-service.dart';
+
 class SignUPScreen extends StatefulWidget {
   const SignUPScreen({super.key});
 
@@ -123,23 +125,12 @@ class _SignUPScreenState extends State<SignUPScreen> {
                   String userPhone = userPhoneController.text.trim();
                   String userPassword = userPasswordController.text.trim();
 
-                  Map<String, dynamic> userData = {
-                    'userName': userName,
-                    'userEmail': userEmail,
-                    'userPhone': userPhone,
-                    'createdAt': DateTime.now(),
-                    // 'userId': user!.uid,
-                  };
-
                   await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
                           email: userEmail, password: userPassword)
                       .then(
                     (value) {
-                      FirebaseFirestore.instance
-                          .collection('users')
-                          .doc()
-                          .set(userData);
+                      signUpFun(userName, userEmail, userPhone, userPassword);
                     },
                   );
 
